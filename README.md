@@ -1,290 +1,111 @@
-# CloudWare Pro
+<!--
+  CloudWare Pro - ERP/CRM/WMS for Wholesale Clothing
+  A beautiful, production-ready README for your GitHub repository
+-->
 
-CloudWare Pro is a working seller management system for a small or medium wholesale clothing business. The project is built as a mini ERP / CRM / WMS platform where a seller can manage products, customers, warehouses, inventory, orders, payments, reports, users, roles, notifications and business settings.
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-17-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java 17" />
+  <img src="https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot" />
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License" />
+</p>
 
-The frontend is not mock-only. It calls the backend through `/api`, and the backend saves data in PostgreSQL. The Docker architecture keeps the original cloud networking setup: PostgreSQL in a private network, two Spring Boot backend instances, and an Nginx web gateway that serves React and proxies API requests.
+<h1 align="center">
+  ☁️ CloudWare Pro
+</h1>
 
-## Stack
+<p align="center">
+  <strong>A complete ERP / CRM / WMS platform for wholesale clothing businesses</strong><br />
+  Mini ERP with multi-warehouse inventory, order lifecycle, payments, reporting, and role-based access.
+</p>
 
-- Backend: Java 17, Spring Boot, Spring JDBC
-- Database: PostgreSQL 16
-- Frontend: React, TypeScript, Vite
-- Icons: lucide-react
-- Gateway: Nginx
-- Runtime: Docker Compose
+<p align="center">
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-api-endpoints">API Endpoints</a> •
+  <a href="#-default-credentials">Credentials</a>
+</p>
 
-## Main modules
+<hr />
 
-- Authentication and profile management
-- Dashboard with summary cards, backend instance indicator and sales chart
-- Products and product categories
-- Customers, balances and customer order history
-- Warehouses and warehouse inventory
-- Inventory, stock adjustment, stock transfer and movement history
-- Orders with items and lifecycle actions: confirm, cancel, ship and deliver
-- Payments with Uzbekistan-friendly methods: CASH, CARD, BANK_TRANSFER, PAYME, CLICK, UZUM_BANK
-- Reports: sales, revenue, inventory, customers, orders and profit
-- Settings: company, store, tax, currency, notifications, orders, inventory, security and theme
-- Users, roles and permission display
-- Activity log and notification panel
+## ✨ Features
 
-## How to run
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📦 Inventory & Warehouses</h3>
+      <ul>
+        <li>Multi-warehouse support</li>
+        <li>Stock adjustments & transfers</li>
+        <li>Movement history tracking</li>
+        <li>Low stock alerts</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🛒 Orders & Payments</h3>
+      <ul>
+        <li>Full order lifecycle (confirm → ship → deliver)</li>
+        <li>Uzbekistan payment methods: PAYME, CLICK, UZUM_BANK, CASH, CARD</li>
+        <li>Customer balance tracking</li>
+        <li>Order history per customer</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📊 Reports & Analytics</h3>
+      <ul>
+        <li>Sales, revenue & profit reports</li>
+        <li>Inventory valuation</li>
+        <li>Customer analytics</li>
+        <li>CSV export</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🔐 Security & Administration</h3>
+      <ul>
+        <li>Role-based access (RBAC)</li>
+        <li>User management</li>
+        <li>Activity audit log</li>
+        <li>Notification system</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
-```bash
-docker compose up --build
-```
+## 🏗️ Architecture
 
-Open the frontend:
+```mermaid
+flowchart TB
+    subgraph "User Browser"
+        FE[React SPA\n:3000]
+    end
 
-```text
-http://localhost:3000
-```
+    subgraph "Docker Network"
+        NG[Nginx Gateway\n:3000 → /api/*]
+        
+        subgraph "Backend Pool"
+            B1[Spring Boot A\n:8081]
+            B2[Spring Boot B\n:8082]
+        end
+        
+        subgraph "Private Network"
+            PG[(PostgreSQL 16\n:5432)]
+        end
+    end
 
-API is available through the same web gateway:
-
-```text
-http://localhost:3000/api/health
-```
-
-If you already had an old database volume and want a clean seed database:
-
-```bash
-docker compose down -v
-docker compose up --build
-```
-
-## Default login credentials
-
-| Role | Email | Password |
-|---|---|---|
-| ADMIN | admin@cloudware.local | admin123 |
-| SELLER | seller@cloudware.local | seller123 |
-| WAREHOUSE_MANAGER | warehouse@cloudware.local | warehouse123 |
-| ACCOUNTANT | accountant@cloudware.local | accountant123 |
-| VIEWER | viewer@cloudware.local | viewer123 |
-
-## Frontend pages
-
-- `/login` — login page
-- `/` — dashboard
-- `/products` — products CRUD
-- `/customers` — customers CRUD
-- `/warehouses` — warehouses CRUD
-- `/inventory` — stock table, adjustment, transfer and movement history
-- `/orders` — order list, order details, add/remove items and lifecycle actions
-- `/payments` — payments CRUD
-- `/reports` — reports with filters and CSV export
-- `/settings` — real backend settings tabs
-- `/users` — user management
-- `/activity` — audit log
-
-## API endpoints
-
-### Health and API info
-
-- `GET /api/health`
-- `GET /api/openapi`
-
-### Auth
-
-- `POST /api/auth/login`
-- `POST /api/auth/logout`
-- `GET /api/auth/me`
-- `PUT /api/auth/profile`
-- `PUT /api/auth/change-password`
-
-### Dashboard
-
-- `GET /api/dashboard/summary`
-- `GET /api/dashboard/sales-chart`
-- `GET /api/dashboard/low-stock`
-- `GET /api/dashboard/recent-orders`
-- `GET /api/dashboard/top-products`
-- `GET /api/dashboard/latest-activity`
-
-### Products and categories
-
-- `GET /api/products`
-- `GET /api/products/{id}`
-- `POST /api/products`
-- `PUT /api/products/{id}`
-- `DELETE /api/products/{id}`
-- `GET /api/products/search?query=`
-- `GET /api/products/categories`
-- `POST /api/products/categories`
-- `PUT /api/products/categories/{id}`
-- `DELETE /api/products/categories/{id}`
-
-### Customers
-
-- `GET /api/customers`
-- `GET /api/customers/{id}`
-- `POST /api/customers`
-- `PUT /api/customers/{id}`
-- `DELETE /api/customers/{id}`
-- `GET /api/customers/search?query=`
-- `GET /api/customers/{id}/orders`
-- `GET /api/customers/{id}/balance`
-
-### Warehouses
-
-- `GET /api/warehouses`
-- `GET /api/warehouses/{id}`
-- `POST /api/warehouses`
-- `PUT /api/warehouses/{id}`
-- `DELETE /api/warehouses/{id}`
-- `GET /api/warehouses/{id}/inventory`
-
-### Inventory
-
-- `GET /api/inventory`
-- `GET /api/inventory/{id}`
-- `GET /api/inventory/product/{productId}`
-- `GET /api/inventory/warehouse/{warehouseId}`
-- `POST /api/inventory/adjust`
-- `POST /api/inventory/transfer`
-- `GET /api/inventory/low-stock`
-- `GET /api/inventory/movements`
-
-### Orders
-
-- `GET /api/orders`
-- `GET /api/orders/{id}`
-- `POST /api/orders`
-- `PUT /api/orders/{id}`
-- `PATCH /api/orders/{id}/status`
-- `DELETE /api/orders/{id}`
-- `GET /api/orders/status/{status}`
-- `GET /api/orders/customer/{customerId}`
-- `POST /api/orders/{id}/items`
-- `DELETE /api/orders/{id}/items/{itemId}`
-- `POST /api/orders/{id}/confirm`
-- `POST /api/orders/{id}/cancel`
-- `POST /api/orders/{id}/ship`
-- `POST /api/orders/{id}/deliver`
-
-### Payments
-
-- `GET /api/payments`
-- `GET /api/payments/{id}`
-- `POST /api/payments`
-- `PUT /api/payments/{id}`
-- `DELETE /api/payments/{id}`
-- `GET /api/payments/order/{orderId}`
-- `GET /api/payments/customer/{customerId}`
-
-### Reports
-
-- `GET /api/reports/sales`
-- `GET /api/reports/revenue`
-- `GET /api/reports/inventory`
-- `GET /api/reports/customers`
-- `GET /api/reports/orders`
-- `GET /api/reports/profit`
-- `GET /api/reports/export/sales`
-- `GET /api/reports/export/inventory`
-
-Report endpoints support filters such as `dateFrom`, `dateTo`, `status`, `warehouseId`, `customerId` and `category` where relevant.
-
-### Settings
-
-- `GET /api/settings`
-- `PUT /api/settings`
-- `GET /api/settings/company`
-- `PUT /api/settings/company`
-- `GET /api/settings/store`
-- `PUT /api/settings/store`
-- `GET /api/settings/tax`
-- `PUT /api/settings/tax`
-- `GET /api/settings/currency`
-- `PUT /api/settings/currency`
-- `GET /api/settings/notifications`
-- `PUT /api/settings/notifications`
-- `GET /api/settings/order`
-- `PUT /api/settings/order`
-- `GET /api/settings/inventory`
-- `PUT /api/settings/inventory`
-- `GET /api/settings/security`
-- `PUT /api/settings/security`
-- `GET /api/settings/theme`
-- `PUT /api/settings/theme`
-
-### Users and roles
-
-- `GET /api/users`
-- `GET /api/users/{id}`
-- `POST /api/users`
-- `PUT /api/users/{id}`
-- `DELETE /api/users/{id}`
-- `PATCH /api/users/{id}/status`
-- `GET /api/roles`
-- `POST /api/roles`
-- `PUT /api/roles/{id}`
-- `DELETE /api/roles/{id}`
-
-### Activity and notifications
-
-- `GET /api/activity`
-- `GET /api/activity/{id}`
-- `GET /api/activity/user/{userId}`
-- `GET /api/activity/module/{module}`
-- `GET /api/notifications`
-- `PATCH /api/notifications/{id}/read`
-- `PATCH /api/notifications/read-all`
-- `DELETE /api/notifications/{id}`
-
-## Seed data
-
-The application creates schema and inserts realistic demo data on startup:
-
-- 5 users
-- 6 roles
-- 11 permissions
-- 20 clothing products
-- 10 wholesale customers
-- 3 warehouses
-- 30 inventory rows
-- 20 orders with different statuses
-- 10 payments
-- settings for all settings tabs
-- activity logs and notifications
-
-## Notes for programmers
-
-- Controllers are separated by module in `backend/src/main/java/com/cloudware/controller`.
-- Shared database helper logic is in `DataService`.
-- Order lifecycle business logic is in `OrderService`.
-- Startup schema and seed data are in `DataSeeder`.
-- Auth tokens are stored in PostgreSQL table `auth_tokens`, so both `backend-a` and `backend-b` can validate the same token.
-- Nginx proxies `/api/` to the backend pool and serves the React SPA.
-
-## Useful test commands
-
-```bash
-# compose validation
-docker compose config
-
-# build and run
-docker compose up --build
-
-# health check
-curl http://localhost:3000/api/health
-
-# login
-curl -s -X POST http://localhost:3000/api/auth/login \
-  -H 'Content-Type: application/json' \
-  -d '{"email":"admin@cloudware.local","password":"admin123"}'
-
-# after saving token from login
-TOKEN="paste-token-here"
-curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/products
-curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/settings
-curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/orders
-```
-
-## Limitations
-
-- Passwords are plain text because this is a diploma/demo project. For production, replace this with BCrypt and Spring Security.
-- A lightweight `/api/openapi` endpoint is included. Full Swagger UI can be added later with `springdoc-openapi-starter-webmvc-ui` if you want a formal Swagger page.
-- The frontend provides CSV export from the report tables. Backend export endpoints currently return JSON data that is ready for CSV/Excel conversion.
-# cloudeware-pro
+    FE --> NG
+    NG -->|/api/| B1
+    NG -->|/api/| B2
+    B1 --> PG
+    B2 --> PG
+    
+    style NG fill:#4ecdc4,stroke:#333,stroke-width:2px,color:#fff
+    style B1 fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff
+    style B2 fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff
+    style PG fill:#4d908e,stroke:#333,stroke-width:2px,color:#fff
+    style FE fill:#f9c74f,stroke:#333,stroke-width:2px,color:#333
