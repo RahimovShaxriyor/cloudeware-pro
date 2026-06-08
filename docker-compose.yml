@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cloudware-postgres
+    environment:
+      POSTGRES_DB: cloudware
+      POSTGRES_USER: cloudware
+      POSTGRES_PASSWORD: cloudware_pass
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - private-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudware -d cloudware"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend-a:
+    build: ./backend
+    container_name: cloudware-backend-a
+    environment:
+      SERVER_PORT: 8080
+      APP_INSTANCE_ID: backend-a
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
+      SPRING_DATASOURCE_USERNAME: cloudware
+      SPRING_DATASOURCE_PASSWORD: cloudware_pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - private-net
+
+  backend-b:
+    build: ./backend
+    container_name: cloudware-backend-b
+    environment:
+      SERVER_PORT: 8080
+      APP_INSTANCE_ID: backend-b
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
+      SPRING_DATASOURCE_USERNAME: cloudware
+      SPRING_DATASOURCE_PASSWORD: cloudware_pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - private-net
+
+  web:
+    build: ./frontend
+    container_name: cloudware-web-gateway
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend-a
+      - backend-b
+    networks:
+      - public-net
+      - private-net
+
+networks:
+  public-net:
+    driver: bridge
+  private-net:
+    driver: bridge
+
+volumes:
+  postgres-data:
