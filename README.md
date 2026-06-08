@@ -1,5 +1,3 @@
-Here's a beautifully crafted README.md for your CloudWare Pro repository that will make your GitHub profile stand out. It includes badges, a clean structure, collapsible sections, a Mermaid architecture diagram, and all the essential information from your original documentation.
-
 ```markdown
 <!--
   CloudWare Pro - ERP/CRM/WMS for Wholesale Clothing
@@ -37,48 +35,10 @@ Here's a beautifully crafted README.md for your CloudWare Pro repository that wi
 
 ## ✨ Features
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <h3>📦 Inventory & Warehouses</h3>
-      <ul>
-        <li>Multi-warehouse support</li>
-        <li>Stock adjustments & transfers</li>
-        <li>Movement history tracking</li>
-        <li>Low stock alerts</li>
-      </ul>
-    </td>
-    <td width="50%" valign="top">
-      <h3>🛒 Orders & Payments</h3>
-      <ul>
-        <li>Full order lifecycle (confirm → ship → deliver)</li>
-        <li>Uzbekistan payment methods: PAYME, CLICK, UZUM_BANK, CASH, CARD</li>
-        <li>Customer balance tracking</li>
-        <li>Order history per customer</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h3>📊 Reports & Analytics</h3>
-      <ul>
-        <li>Sales, revenue & profit reports</li>
-        <li>Inventory valuation</li>
-        <li>Customer analytics</li>
-        <li>CSV export</li>
-      </ul>
-    </td>
-    <td width="50%" valign="top">
-      <h3>🔐 Security & Administration</h3>
-      <ul>
-        <li>Role-based access (RBAC)</li>
-        <li>User management</li>
-        <li>Activity audit log</li>
-        <li>Notification system</li>
-      </ul>
-    </td>
-  </tr>
-</table>
+| | |
+|--|--|
+| <h3>📦 Inventory & Warehouses</h3><ul><li>Multi-warehouse support</li><li>Stock adjustments & transfers</li><li>Movement history tracking</li><li>Low stock alerts</li></ul> | <h3>🛒 Orders & Payments</h3><ul><li>Full order lifecycle (confirm → ship → deliver)</li><li>Uzbekistan payment methods: PAYME, CLICK, UZUM_BANK, CASH, CARD</li><li>Customer balance tracking</li><li>Order history per customer</li></ul> |
+| <h3>📊 Reports & Analytics</h3><ul><li>Sales, revenue & profit reports</li><li>Inventory valuation</li><li>Customer analytics</li><li>CSV export</li></ul> | <h3>🔐 Security & Administration</h3><ul><li>Role-based access (RBAC)</li><li>User management</li><li>Activity audit log</li><li>Notification system</li></ul> |
 
 ## 🏗️ Architecture
 
@@ -280,15 +240,3 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
   Made with ☕ and ☁️ for wholesale business management
 </p>
 ```
-
-This README features:
-
-- **Eye-catching badges** with tech stack and license
-- **Table layout** for feature highlights
-- **Mermaid architecture diagram** showing your Docker networking setup (Nginx → two Spring Boot instances → PostgreSQL)
-- **Collapsible API section** to keep the document clean
-- **Color-coded tables** for credentials and testing commands
-- **Clear quick start** with docker commands
-- **Project structure** tree
-- **Testing commands** with curl examples
-- **Important notes** about the demo limitations
