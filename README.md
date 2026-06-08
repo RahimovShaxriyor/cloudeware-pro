@@ -1,3 +1,6 @@
+Here's a beautifully crafted README.md for your CloudWare Pro repository that will make your GitHub profile stand out. It includes badges, a clean structure, collapsible sections, a Mermaid architecture diagram, and all the essential information from your original documentation.
+
+```markdown
 <!--
   CloudWare Pro - ERP/CRM/WMS for Wholesale Clothing
   A beautiful, production-ready README for your GitHub repository
@@ -109,3 +112,183 @@ flowchart TB
     style B2 fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff
     style PG fill:#4d908e,stroke:#333,stroke-width:2px,color:#fff
     style FE fill:#f9c74f,stroke:#333,stroke-width:2px,color:#333
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Docker & Docker Compose
+- Git
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/cloudeware-pro.git
+cd cloudeware-pro
+
+# Build and run all services
+docker compose up --build
+```
+
+### Access the application
+
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:3000 |
+| API Gateway | http://localhost:3000/api |
+
+### Clean start (fresh database)
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+## 🔑 Default Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| 👑 **ADMIN** | admin@cloudware.local | admin123 |
+| 💼 **SELLER** | seller@cloudware.local | seller123 |
+| 📦 **WAREHOUSE_MANAGER** | warehouse@cloudware.local | warehouse123 |
+| 🧾 **ACCOUNTANT** | accountant@cloudware.local | accountant123 |
+| 👀 **VIEWER** | viewer@cloudware.local | viewer123 |
+
+## 📁 Project Structure
+
+```
+cloudeware-pro/
+├── backend/                 # Spring Boot application
+│   ├── src/main/java/...   # Java source code
+│   └── Dockerfile
+├── frontend/                # React + TypeScript + Vite
+│   ├── src/
+│   └── Dockerfile
+├── nginx/                   # Nginx configuration
+│   └── default.conf
+├── docker-compose.yml
+└── README.md
+```
+
+## 📡 API Endpoints
+
+<details>
+<summary><b>Click to expand full API reference</b></summary>
+
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/login` | Login with email/password |
+| POST | `/api/auth/logout` | Invalidate session |
+| GET | `/api/auth/me` | Get current user profile |
+
+### Products & Categories
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/products` | List all products |
+| POST | `/api/products` | Create product |
+| PUT | `/api/products/{id}` | Update product |
+| DELETE | `/api/products/{id}` | Delete product |
+
+### Orders
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/orders` | List orders |
+| POST | `/api/orders` | Create order |
+| POST | `/api/orders/{id}/confirm` | Confirm order |
+| POST | `/api/orders/{id}/ship` | Mark as shipped |
+| POST | `/api/orders/{id}/deliver` | Mark as delivered |
+
+### Inventory
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/inventory` | Current stock levels |
+| POST | `/api/inventory/adjust` | Adjust stock |
+| POST | `/api/inventory/transfer` | Transfer between warehouses |
+
+### Reports
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/reports/sales` | Sales report |
+| GET | `/api/reports/revenue` | Revenue report |
+| GET | `/api/reports/inventory` | Inventory report |
+| GET | `/api/reports/export/sales` | Export to CSV |
+
+</details>
+
+## 🧪 Testing Commands
+
+```bash
+# Health check
+curl http://localhost:3000/api/health
+
+# Login and get token
+curl -X POST http://localhost:3000/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@cloudware.local","password":"admin123"}'
+
+# Use token for authenticated requests
+TOKEN="your-token-here"
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/products
+```
+
+## 📦 Seed Data
+
+On first startup, the application automatically creates:
+- ✅ 6 roles with permissions
+- ✅ 5 demo users
+- ✅ 20 clothing products
+- ✅ 10 wholesale customers
+- ✅ 3 warehouses
+- ✅ 30 inventory records
+- ✅ 20 orders with various statuses
+- ✅ 10 payments
+- ✅ Activity logs & notifications
+
+## ⚠️ Important Notes
+
+> **Security Notice**: This is a **demonstration/diploma project**. Passwords are stored in plain text. For production use, implement:
+> - BCrypt password encoding
+> - Spring Security with JWT
+> - HTTPS configuration
+> - Rate limiting
+> - SQL injection prevention (though JDBC templates are parameterized)
+
+## 🛠️ Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Backend | Java 17, Spring Boot, Spring JDBC |
+| Database | PostgreSQL 16 |
+| Frontend | React 18, TypeScript, Vite |
+| Icons | Lucide React |
+| Gateway | Nginx (reverse proxy + SPA serving) |
+| Container | Docker & Docker Compose |
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/yourusername/cloudeware-pro/issues).
+
+---
+
+<p align="center">
+  Made with ☕ and ☁️ for wholesale business management
+</p>
+```
+
+This README features:
+
+- **Eye-catching badges** with tech stack and license
+- **Table layout** for feature highlights
+- **Mermaid architecture diagram** showing your Docker networking setup (Nginx → two Spring Boot instances → PostgreSQL)
+- **Collapsible API section** to keep the document clean
+- **Color-coded tables** for credentials and testing commands
+- **Clear quick start** with docker commands
+- **Project structure** tree
+- **Testing commands** with curl examples
+- **Important notes** about the demo limitations
