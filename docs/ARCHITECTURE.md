@@ -1,82 +1,65 @@
-# CloudWare Pro — Architecture
+# CloudWare Pro — Microservices Architecture
 
 ## Overview
 
-CloudWare Pro is a cloud-hosted ERP/CRM/WMS platform for a wholesale clothing company.
-The system is containerised using Docker and orchestrated with Docker Compose.
+CloudWare Pro v2 uses a **7-service microservices architecture** behind an **Nginx API Gateway**, with a **React SPA** frontend and **PostgreSQL 16** database.
 
-## Network topology
+## Service map
+
+| Service | Port | API routes | Responsibility |
+|---------|------|------------|----------------|
+| **identity-service** | 8081 | `/api/auth`, `/api/users`, `/api/roles` | Authentication, users, RBAC |
+| **catalog-service** | 8082 | `/api/products` | Products and categories |
+| **crm-service** | 8083 | `/api/customers` | Customer master data |
+| **wms-service** | 8084 | `/api/warehouses`, `/api/inventory` | Warehouses, stock, movements |
+| **order-service** | 8085 | `/api/orders` | Order lifecycle |
+| **finance-service** | 8086 | `/api/payments` | Payments and reconciliation |
+| **platform-service** | 8087 | `/api/dashboard`, `/api/reports`, `/api/settings`, `/api/activity`, `/api/notifications`, `/api/network`, `/api/health` | Analytics, settings, audit |
+
+## Request flow
 
 ```
-Internet
-    │  HTTPS 443
-    ▼
-[ Public Subnet ]
-  Nginx Gateway + Load Balancer (round-robin upstream)
-    │  HTTP 8080
-    ├─────────────────────┐
-    ▼                     ▼
-[ Private App Subnet ]
-  backend-a            backend-b
-  Spring Boot          Spring Boot
-  (replica)            (replica)
-    │                     │
-    └──────────┬──────────┘
-               ▼
-[ Database Subnet ]
-  PostgreSQL 15
-  (private, not internet-accessible)
-
-[ VPN tunnel ]
-  Head office ──────────────────→ cloud VPC
-  Warehouses  ──────────────────→ cloud VPC
+Browser → Nginx (port 3000) → path-based routing → microservice → PostgreSQL
 ```
 
-## Assignment evidence mapping
+## Code structure
 
-| Criteria | Evidence |
-|---|---|
-| A.P1, A.M1, A.D1 | Cloud Network page + this document |
-| A.P2 | Frontend → Nginx → backend API → PostgreSQL |
-| B.P3, B.P4, B.M2 | Remote Spring Boot API, browser React client, Nginx load balancer |
-| C.P5, C.P6 | Full ERP/CRM/WMS implementation in cloud containers |
-| C.M3, C.D2 | Load test script, two backend replicas |
-| D.P7, D.P8, D.M4, D.D3 | Before/after scaling, recommendations page |
+```
+backend/
+├── cloudware-common/          # Shared controllers, services, JDBC layer
+├── services/
+│   ├── identity-service/
+│   ├── catalog-service/
+│   ├── crm-service/
+│   ├── wms-service/
+│   ├── order-service/
+│   ├── finance-service/
+│   └── platform-service/
+└── pom.xml                    # Maven parent
 
-## Security controls
+frontend/
+├── src/
+│   ├── api/                   # HTTP client
+│   ├── auth/                  # Auth context
+│   ├── components/            # UI + layout
+│   ├── pages/                 # Route pages
+│   └── styles/                # Global CSS
+└── nginx.conf                 # API gateway routing
+```
 
-- **TLS** — Nginx terminates SSL; backend never exposes port 8080 publicly
-- **Firewall** — Docker network; only port 3000 exposed on host
-- **Token auth** — Bearer token required for every API call (except login + health)
-- **RBAC** — ADMIN, SALES_MANAGER, WAREHOUSE_MANAGER roles enforced in API layer
-- **Private subnets** — DB not reachable from internet; backends not directly routable
-- **VPN** — Staff connect via site-to-site VPN (simulated by Docker internal DNS)
+Each microservice loads only its controllers via `@Microservice("name")` conditional beans.
 
-## Docker Compose services
+## Security
 
-| Service | Image | Purpose |
-|---|---|---|
-| frontend | nginx:alpine | Serves React SPA + reverse-proxies /api to load-balanced backends |
-| backend-a | cloudware/backend | Spring Boot API instance A |
-| backend-b | cloudware/backend | Spring Boot API instance B |
-| db | postgres:15 | PostgreSQL database (private network only) |
+- BCrypt password hashing
+- Bearer token authentication
+- Role-based permissions enforced on sensitive endpoints
+- Private Docker network for backend services and database
 
-## Technology choices
+## Run
 
-| Layer | Technology | Reason |
-|---|---|---|
-| Frontend | React 18 + TypeScript + Vite | Type safety, fast dev builds, SPA routing |
-| Styling | Pure CSS custom properties | No build overhead; full control |
-| Backend | Spring Boot 3 + JDBC | Industry standard; minimal dependencies |
-| Database | PostgreSQL 15 | Relational integrity; free/open-source |
-| Gateway | Nginx | Proven reverse proxy; native round-robin LB |
-| Containers | Docker Compose | Reproducible local deployment |
+```bash
+docker compose up --build
+```
 
-## Scaling strategy
-
-**Horizontal scaling** — Add more backend replicas to the Nginx upstream block.
-No code changes required; Nginx automatically distributes traffic.
-
-**Vertical scaling** — Increase container CPU/memory limits in docker-compose.yml.
-
-**Database scaling** — Add a read replica for reporting queries; use connection pooling (PgBouncer).
+Open `http://localhost:3000`

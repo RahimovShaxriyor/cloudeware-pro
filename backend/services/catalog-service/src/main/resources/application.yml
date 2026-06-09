@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/cloudware}
+    username: ${SPRING_DATASOURCE_USERNAME:cloudware}
+    password: ${SPRING_DATASOURCE_PASSWORD:cloudware_pass}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+server:
+  port: ${SERVER_PORT:8082}
+  compression:
+    enabled: true
+
+cloudware:
+  service: catalog
+
+app:
+  instance-id: ${APP_INSTANCE_ID:catalog-service}
+
+logging:
+  level:
+    root: INFO
+    com.cloudware: INFO

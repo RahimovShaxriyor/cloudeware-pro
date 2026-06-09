@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -13,42 +12,23 @@
     </parent>
 
     <groupId>com.cloudware</groupId>
-    <artifactId>cloudware-pro</artifactId>
+    <artifactId>cloudware-parent</artifactId>
     <version>1.0.0</version>
-    <name>CloudWare Pro</name>
-    <description>Cloud ERP/CRM/WMS platform — BTEC Unit 6 Diploma Project</description>
+    <packaging>pom</packaging>
+    <name>CloudWare Pro — Microservices Parent</name>
+
+    <modules>
+        <module>cloudware-common</module>
+        <module>services/identity-service</module>
+        <module>services/catalog-service</module>
+        <module>services/crm-service</module>
+        <module>services/wms-service</module>
+        <module>services/order-service</module>
+        <module>services/finance-service</module>
+        <module>services/platform-service</module>
+    </modules>
 
     <properties>
         <java.version>17</java.version>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

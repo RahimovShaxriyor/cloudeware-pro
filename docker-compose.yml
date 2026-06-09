@@ -16,12 +16,16 @@ services:
       timeout: 5s
       retries: 5
 
-  backend-a:
-    build: ./backend
-    container_name: cloudware-backend-a
+  identity-service:
+    build:
+      context: ./backend
+      args:
+        SERVICE_MODULE: services/identity-service
+        SERVICE_JAR: identity-service-1.0.0.jar
+    container_name: cloudware-identity
     environment:
-      SERVER_PORT: 8080
-      APP_INSTANCE_ID: backend-a
+      SERVER_PORT: 8081
+      APP_INSTANCE_ID: identity-service
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
       SPRING_DATASOURCE_USERNAME: cloudware
       SPRING_DATASOURCE_PASSWORD: cloudware_pass
@@ -31,12 +35,111 @@ services:
     networks:
       - private-net
 
-  backend-b:
-    build: ./backend
-    container_name: cloudware-backend-b
+  catalog-service:
+    build:
+      context: ./backend
+      args:
+        SERVICE_MODULE: services/catalog-service
+        SERVICE_JAR: catalog-service-1.0.0.jar
+    container_name: cloudware-catalog
     environment:
-      SERVER_PORT: 8080
-      APP_INSTANCE_ID: backend-b
+      SERVER_PORT: 8082
+      APP_INSTANCE_ID: catalog-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
+      SPRING_DATASOURCE_USERNAME: cloudware
+      SPRING_DATASOURCE_PASSWORD: cloudware_pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - private-net
+
+  crm-service:
+    build:
+      context: ./backend
+      args:
+        SERVICE_MODULE: services/crm-service
+        SERVICE_JAR: crm-service-1.0.0.jar
+    container_name: cloudware-crm
+    environment:
+      SERVER_PORT: 8083
+      APP_INSTANCE_ID: crm-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
+      SPRING_DATASOURCE_USERNAME: cloudware
+      SPRING_DATASOURCE_PASSWORD: cloudware_pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - private-net
+
+  wms-service:
+    build:
+      context: ./backend
+      args:
+        SERVICE_MODULE: services/wms-service
+        SERVICE_JAR: wms-service-1.0.0.jar
+    container_name: cloudware-wms
+    environment:
+      SERVER_PORT: 8084
+      APP_INSTANCE_ID: wms-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
+      SPRING_DATASOURCE_USERNAME: cloudware
+      SPRING_DATASOURCE_PASSWORD: cloudware_pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - private-net
+
+  order-service:
+    build:
+      context: ./backend
+      args:
+        SERVICE_MODULE: services/order-service
+        SERVICE_JAR: order-service-1.0.0.jar
+    container_name: cloudware-order
+    environment:
+      SERVER_PORT: 8085
+      APP_INSTANCE_ID: order-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
+      SPRING_DATASOURCE_USERNAME: cloudware
+      SPRING_DATASOURCE_PASSWORD: cloudware_pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - private-net
+
+  finance-service:
+    build:
+      context: ./backend
+      args:
+        SERVICE_MODULE: services/finance-service
+        SERVICE_JAR: finance-service-1.0.0.jar
+    container_name: cloudware-finance
+    environment:
+      SERVER_PORT: 8086
+      APP_INSTANCE_ID: finance-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
+      SPRING_DATASOURCE_USERNAME: cloudware
+      SPRING_DATASOURCE_PASSWORD: cloudware_pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - private-net
+
+  platform-service:
+    build:
+      context: ./backend
+      args:
+        SERVICE_MODULE: services/platform-service
+        SERVICE_JAR: platform-service-1.0.0.jar
+    container_name: cloudware-platform
+    environment:
+      SERVER_PORT: 8087
+      APP_INSTANCE_ID: platform-service
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudware
       SPRING_DATASOURCE_USERNAME: cloudware
       SPRING_DATASOURCE_PASSWORD: cloudware_pass
@@ -52,8 +155,13 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - backend-a
-      - backend-b
+      - identity-service
+      - catalog-service
+      - crm-service
+      - wms-service
+      - order-service
+      - finance-service
+      - platform-service
     networks:
       - public-net
       - private-net
